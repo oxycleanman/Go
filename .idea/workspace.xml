@@ -2,19 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="47517d49-7c8c-4476-aaa6-463296f16184" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GoTest/.idea/inspectionProfiles/Project_Default.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GoTest/.idea/misc.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GoTest/.idea/workspace.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GoTest2/.idea/inspectionProfiles/Project_Default.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GoTest2/.idea/libraries/GOPATH__GoTest2_.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GoTest2/.idea/misc.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GoTest2/.idea/modules.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GoTest2/.idea/workspace.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GoTest2/GoTest2.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GoTest2/out/hello.exe" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GoTest2/src/hello/Procfile" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GoTest2/src/hello/hello.exe" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GoTest2/src/hello/hello.go" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
