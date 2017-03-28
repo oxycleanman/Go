@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -9,14 +10,21 @@ import (
 )
 
 type configElement struct {
-	EligibilityURL    string `json:"eligibilityUrl"`
-	EligibilityMethod string `json:"eligibilityMethod"`
+	EligibilityURL    string `json:"EligibilityUrl"`
+	EligibilityMethod string
+	OrderAggURL       string `json:"OrderAggUrl"`
+	OrderAggMethod    string
 }
 
 //Config type used to get configuration settings for the API
-type Config struct {
-	Development configElement `json:"development"`
-	Production  configElement `json:"production"`
+type config struct {
+	Environment string
+	Development configElement
+	Production  configElement
+}
+
+type CurrentConfig struct {
+	Settings configElement
 }
 
 type replyStructure struct {
@@ -25,23 +33,45 @@ type replyStructure struct {
 	Id     string
 }
 
-var CONFIG Config
+var client = &http.Client{}
+var Config CurrentConfig
+
+func handleRequestError(errorMessage error, errorCode int, w http.ResponseWriter) {
+	w.WriteHeader(errorCode)
+	log.Fatalln(errorMessage)
+}
+
+func handleOrderAggResponse(resp []byte) {
+	fmt.Println(string(resp))
+}
 
 func homePage(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
-		idValue := req.URL.Query().Get("id")
-		myReply := replyStructure{Data: "This is a test of the data attribute", Status: 200, Id: idValue}
-		bs, _ := json.Marshal(myReply)
-		w.Write(bs)
+		//Detect SSO token and return appropriate response
+		if ssoCookie, err := req.Cookie("THDSSO"); err != nil {
+			fmt.Println("Unauthorized Request From: ", req.Referer())
+			w.WriteHeader(http.StatusUnauthorized)
+		} else {
+			//Make Order Agg callout and respond with data
+			orderAggBody := "{order(id:W111111111)}"
+			if aggRequest, err := http.NewRequest(Config.Settings.OrderAggMethod, Config.Settings.OrderAggURL, bytes.NewBufferString(orderAggBody)); err != nil {
+				fmt.Println("Error getting http request object")
+				handleRequestError(err, http.StatusInternalServerError, w)
+			} else {
+				aggRequest.Header.Set("Authorization", "Bearer "+ssoCookie.Value) //+ssoCookie.String())
+				aggRequest.Header.Set("Content-Type", "application/json")
+				if resp, err := client.Do(aggRequest); err != nil {
+					fmt.Println("Error making service callout")
+					handleRequestError(err, http.StatusInternalServerError, w)
+				} else {
+					respBody, _ := ioutil.ReadAll(resp.Body)
+					defer resp.Body.Close()
+					w.Write(respBody)
+				}
+			}
+		}
 	} else {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		/*w.Write([]byte(`
-			<html>
-				<div>
-					Error: Unsupported Method: ` + req.Method + `
-				</div>
-			</html>
-		`))*/
 	}
 
 }
@@ -62,17 +92,25 @@ func orderPage(w http.ResponseWriter, req *http.Request) {
 func main() {
 	//Get configurations
 	configFile, err := ioutil.ReadFile("config.json")
+	var c config
 	if err != nil {
 		log.Fatalln(err)
 	} else {
-		if err := json.Unmarshal(configFile, &CONFIG); err != nil {
+		if err := json.Unmarshal(configFile, &c); err != nil {
 			log.Fatalln(err)
 		} else {
-			fmt.Println(CONFIG)
+			//Set global configuration variable
+			if c.Environment == "dev" {
+				Config.Settings = c.Development
+			} else {
+				Config.Settings = c.Production
+			}
+
+			fmt.Println("Config Settings: ", Config)
 			fmt.Println("Server started on port 8080")
 			http.HandleFunc("/", homePage)
 			http.HandleFunc("/orders", orderPage)
-			http.ListenAndServe(":8080", nil)
+			http.ListenAndServe("localhost.homedepot.com:8080", nil)
 		}
 	}
 }

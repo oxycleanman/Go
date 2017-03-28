@@ -1,10 +1,15 @@
 {
-  "development": {
-    "eligibilityUrl": "https://com-onlinereturn-qa.apps-np.homedepot.com/api/returnEligibility/",
-    "eligibilityMethod": "GET"
+  "Environment": "dev",
+  "Development": {
+    "EligibilityUrl": "https://com-onlinereturn-qa.apps-np.homedepot.com/api/returnEligibility/",
+    "EligibilityMethod": "GET",
+    "OrderAggUrl": "https://thdapiqae.homedepot.com/contactCenterCrm/graph",
+    "OrderAggMethod": "POST"
   },
-  "production": {
-    "eligibilityUrl": "https://com-onlinereturn.apps.homedepot.com/api/returnEligibility/",
-    "eligibilityMethod": "GET"
+  "Production": {
+    "EligibilityUrl": "https://com-onlinereturn.apps.homedepot.com/api/returnEligibility/",
+    "EligibilityMethod": "GET",
+    "OrderAggUrl": "https://thdapiqae.homedepot.com/contactCenterCrm/graph",
+    "OrderAggMethod": "POST"
   }
 }
