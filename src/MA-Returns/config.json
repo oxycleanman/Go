@@ -1,0 +1,10 @@
+{
+  "development": {
+    "eligibilityUrl": "https://com-onlinereturn-qa.apps-np.homedepot.com/api/returnEligibility/",
+    "eligibilityMethod": "GET"
+  },
+  "production": {
+    "eligibilityUrl": "https://com-onlinereturn.apps.homedepot.com/api/returnEligibility/",
+    "eligibilityMethod": "GET"
+  }
+}
