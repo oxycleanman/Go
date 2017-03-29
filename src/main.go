@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"apiresp"
 )
 
 type configElement struct {
@@ -53,12 +55,12 @@ func homePage(w http.ResponseWriter, req *http.Request) {
 			w.WriteHeader(http.StatusUnauthorized)
 		} else {
 			//Make Order Agg callout and respond with data
-			orderAggBody := "{order(id:W111111111)}"
+			orderAggBody := apiresp.GetOrderAggRequest("W111111111")
 			if aggRequest, err := http.NewRequest(Config.Settings.OrderAggMethod, Config.Settings.OrderAggURL, bytes.NewBufferString(orderAggBody)); err != nil {
 				fmt.Println("Error getting http request object")
 				handleRequestError(err, http.StatusInternalServerError, w)
 			} else {
-				aggRequest.Header.Set("Authorization", "Bearer "+ssoCookie.Value) //+ssoCookie.String())
+				aggRequest.Header.Set("Authorization", "Bearer "+ssoCookie.Value)
 				aggRequest.Header.Set("Content-Type", "application/json")
 				if resp, err := client.Do(aggRequest); err != nil {
 					fmt.Println("Error making service callout")
